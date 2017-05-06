@@ -10,12 +10,12 @@ https://wiki.archlinux.org/index.php/Internet_sharing
 * eth0 -> interface with internet access
 
 ## Steps:
-* [create AP with WPA2-PSK](../blob/master/ap_wpa_psk)
-** install packages
-** configure AP network interface
-** configure DHCP
-** configure AP hosting
-** configure NAT
-** test AP
+* [create AP with WPA2-PSK](../master/ap_wpa_psk)
+  * install packages
+  * configure AP network interface
+  * configure DHCP
+  * configure AP hosting
+  * configure NAT
+  * test AP
 * [upgrade authentication to WPA2-Enterprise]()
 
