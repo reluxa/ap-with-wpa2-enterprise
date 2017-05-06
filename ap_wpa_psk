@@ -1,0 +1,68 @@
+
+# install packages
+
+sudo apt-get install dnsmasq hostapd iptables
+sudo service dnsmasq stop
+sudo service hostapd stop
+
+# disable DHCP for AP interface
+
+sudo vim /etc/dhcpcd.conf
+	denyinterfaces wlan1
+	
+# configure network interface
+	
+sudo vim /etc/network/interfaces
+	allow-hotplug wlan1  
+	iface wlan1 inet static  
+		address 192.168.2.1
+		netmask 255.255.255.0
+		network 192.168.2.0
+
+sudo service dhcpcd restart
+sudo ifdown wlan1
+sudo ifup wlan1
+
+# configure dnsmasq (DHCP)
+
+sudo vim /etc/dnsmasq.conf
+interface=wlan1
+  dhcp-range=192.168.2.2,192.168.2.20,255.255.255.0,24h
+
+# configure hostapd (AP)
+
+sudo vim /etc/hostapd/hostapd.conf
+	interface=wlan1
+	ssid=PI_AP
+	wpa_passphrase=testtesttesttest
+	bridge=br0
+	driver=nl80211
+	hw_mode=g
+	channel=7
+	wmm_enabled=0
+	macaddr_acl=0
+	auth_algs=1
+	ignore_broadcast_ssid=0
+	wpa=2
+	wpa_key_mgmt=WPA-PSK
+	wpa_pairwise=TKIP
+	rsn_pairwise=CCMP
+	
+sudo vim /etc/default/hostapd
+	DAEMON_CONF="/etc/hostapd/hostapd.conf"
+
+# start AP
+
+sudo service hostapd restart  
+sudo service dnsmasq restart
+
+# allow traffic forwarding
+
+sudo vim /etc/sysctl.conf
+	net.ipv4.ip_forward=1
+
+# activate NAT
+
+sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+sudo iptables -A FORWARD -i wlan1 -o eth0 -j ACCEPT
