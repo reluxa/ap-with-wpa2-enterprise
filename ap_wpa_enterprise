@@ -35,3 +35,14 @@ sudo service hostapd restart
 # test AP
 
 sudo hostapd -d /etc/hostapd/hostapd.conf
+
+# test freeradius:
+reluxa@raspberrypi:~ $ radtest test_user test_user 127.0.0.1 0 radiussecret
+Sending Access-Request of id 71 to 127.0.0.1 port 1812
+        User-Name = "test_user"
+        User-Password = "test_user"
+        NAS-IP-Address = 127.0.1.1
+        NAS-Port = 0
+        Message-Authenticator = 0x00000000000000000000000000000000
+rad_recv: Access-Accept packet from host 127.0.0.1 port 1812, id=71, length=20
+
